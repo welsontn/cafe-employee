@@ -26,7 +26,7 @@ exports.get = asyncHandler(async (req: Request, res: Response, NextFunction): Pr
     employees = await Employee.find({});
   }
 
-  res.send({employees:employees, cafes:cafe_names});
+  return res.send({employees:employees, cafes:cafe_names});
 });
 
 // Handle Employee create on POST.
@@ -35,14 +35,13 @@ exports.post = asyncHandler(async (req: Request, res: Response, NextFunction): P
   if (!errors.isEmpty()) {
     return res.status(422).jsonp(errors.array());
   }
-
   let remployee: IEmployee = {
     name: req.body.name,
     email_address: req.body.email_address,
     phone_number: req.body.phone_number,
     gender: req.body.gender,
     date_start: req.body.date_start,
-    cafe_id: "not exist" || "",
+    cafe_id: req.body.cafe_id || "",
   };
 
   // start transaction
@@ -51,7 +50,8 @@ exports.post = asyncHandler(async (req: Request, res: Response, NextFunction): P
   try {
     // validate cafe exist
     if (remployee.cafe_id !== ""){
-      var cafe: HydratedDocument<ICafe> | null = await Cafe.findOneAndUpdate({ _id: remployee.cafe_id}, {$inc: {employee_count:1}}).exec();
+      var cafe: HydratedDocument<ICafe> | null = await Cafe.findOneAndUpdate({ _id: remployee.cafe_id},
+                                                    {$inc: {employee_count:1}, new: true}).exec();
       if (cafe === null){
         throw new Error("Invalid cafe input!");
       }
@@ -69,11 +69,11 @@ exports.post = asyncHandler(async (req: Request, res: Response, NextFunction): P
     session.abortTransaction();
     session.endSession();
     let msg: string = utils.errorCheck(err);
-    res.status(403).send(msg);
+    return res.status(403).send(msg);
   }
 
   // send response back
-  res.sendStatus(200);
+  return res.sendStatus(200);
 });
 
 // Update employee
@@ -124,7 +124,7 @@ exports.put = asyncHandler(async (req: Request, res: Response, NextFunction): Pr
     }
 
     // reduce employee count by 1
-    if (employee.cafe_id !== ""){
+    if (employee.cafe_id){
       await Cafe.updateOne({ _id: employee.cafe_id}, {$inc: {employee_count:-1}}).exec();
     }
 
@@ -141,11 +141,11 @@ exports.put = asyncHandler(async (req: Request, res: Response, NextFunction): Pr
     session.abortTransaction();
     session.endSession();
     let msg: string = utils.errorCheck(err);
-    res.status(403).send(msg);
+    return res.status(403).send(msg);
   }
 
   // send response back
-  res.sendStatus(200);
+  return res.sendStatus(200);
 });
 
 // Delete employee
@@ -157,12 +157,12 @@ exports.delete = asyncHandler(async (req: Request, res: Response, NextFunction):
   session.startTransaction();
   try {
     // delete
-    var employee = await Employee.deleteOne({_id:qid});
+    var employee = await Employee.findOneAndDelete({_id:qid});
 
-    // // reduce employee count by 1 if has cafe attached
-    // if (employee.cafe_id !== ""){
-    //   await Cafe.updateOne({ _id: employee.cafe_id}, {$inc: {employee_count:-1}}).exec();
-    // }
+    // reduce employee count by 1 if has cafe attached
+    if (employee !== null && employee.cafe_id){
+      await Cafe.updateOne({ _id: employee.cafe_id}, {$inc: {employee_count:-1}}).exec();
+    }
 
     // commit transaction
     session.commitTransaction();
@@ -171,9 +171,9 @@ exports.delete = asyncHandler(async (req: Request, res: Response, NextFunction):
     session.abortTransaction();
     session.endSession();
     let msg: string = utils.errorCheck(err);
-    res.status(403).send(msg);
+    return res.status(403).send(msg);
   }
 
   // send response back
-  res.sendStatus(200);
+  return res.sendStatus(200);
 });

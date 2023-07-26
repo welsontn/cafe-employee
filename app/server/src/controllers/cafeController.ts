@@ -25,7 +25,7 @@ exports.get = asyncHandler(async (req: Request, res: Response, NextFunction): Pr
     result.push(temp)
   };
 
-  res.send(result);
+  return res.send(result);
 });
 
 // Handle Cafe create on POST.
@@ -99,10 +99,10 @@ exports.put = asyncHandler(async (req: Request, res: Response, NextFunction): Pr
     session.abortTransaction();
     session.endSession();
     let msg: string = utils.errorCheck(err);
-    res.status(403).send(msg);
+    return res.status(403).send(msg);
   }
 
-  res.sendStatus(200);
+  return res.sendStatus(200);
 });
 
 // Delete Cafe
@@ -124,9 +124,9 @@ exports.delete = asyncHandler(async (req: Request, res: Response, NextFunction):
     session.abortTransaction();
     session.endSession();
     let msg: string = utils.errorCheck(err);
-    res.status(403).send(msg);
+    return res.status(403).send(msg);
   }
 
   // send response back
-  res.sendStatus(200);
+  return res.sendStatus(200);
 });

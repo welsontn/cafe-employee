@@ -14,7 +14,7 @@ const connect = async () => {
     let db_url = `mongodb://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@${process.env.MONGO_HOST}:${process.env.MONGO_PORT}/${process.env.MONGO_DB_NAME}`; 
     const connection = await mongoose.connect(db_url, options)
 
-    connection.on('error', (err:string) => {
+    mongoose.connection.on('error', (err:string) => {
       console.log(err);
     });
   

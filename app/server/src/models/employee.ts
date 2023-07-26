@@ -1,5 +1,6 @@
 import { HydratedDocument, Document, Schema, Model, model } from 'mongoose';
 import Cafe, { ICafe } from "./cafe";
+import {v1 as uuid} from 'uuid';
 import utils from "../utils/utils";
 
 export interface IEmployee {
@@ -20,7 +21,7 @@ export enum EGender {
 
 // schema
 export const EmployeeSchema: Schema = new Schema<IEmployee>({
-  _id: { type: String, default: "UI" + utils.generateRandomId(7)},
+  _id: { type: String, default: uuid },
   name: { type: String, minLength: 2, maxLength: 200 },
   email_address: { type: String, required: true},
   phone_number: String,
@@ -36,16 +37,6 @@ export const EmployeeSchema: Schema = new Schema<IEmployee>({
 EmployeeSchema.virtual('days_worked').get(function(this: IEmployee): number {
   return utils.dateDiff(new Date().toString(), this.date_start.toString());
 });
-
-// hook method
-EmployeeSchema.pre('deleteOne', async function (this: IEmployee) {
-  let employee = this;
-  // reduce cafe count if attached
-  if (employee.cafe_id !== ""){
-    await Cafe.updateOne({ _id: employee.cafe_id}, {$inc: {employee_count:-1}}).exec();
-  }
-});
-
 
 const Employee = model<IEmployee>("employee", EmployeeSchema, "employees");
 export default Employee;
