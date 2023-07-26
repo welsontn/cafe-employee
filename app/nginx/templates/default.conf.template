@@ -1,0 +1,54 @@
+# NOTE: conf in conf.d directory will be replaced by conf inside templates folder
+#reactjs entry
+server {
+    listen 3000 default_server;
+
+    root /usr/app/client;
+
+    index index.html index.htm;
+
+    server_name _;
+
+    charset utf-8;
+
+    location = /favicon.ico { log_not_found off; access_log off; }
+    location = /robots.txt  { log_not_found off; access_log off; }
+
+    location / {
+        include    /etc/nginx/includes/proxy.conf;
+        proxy_pass http://${NGINX_REACTJS_HOST}:${NGINX_REACTJS_PORT};
+    }
+
+    error_page 404 /index.html;
+
+    location ~ /\.ht {
+        deny all;
+    }
+}
+
+#node entry (consideration: use same port but check for api extension to node proxy, or adjust using subdomain)
+server {
+    listen 8079 default_server;
+
+    root /usr/app/client;
+
+    index index.html index.htm;
+
+    server_name _;
+
+    charset utf-8;
+
+    location = /favicon.ico { log_not_found off; access_log off; }
+    location = /robots.txt  { log_not_found off; access_log off; }
+
+    location /${NGINX_NODE_API} {
+        include    /etc/nginx/includes/proxy.conf;
+        proxy_pass http://${NGINX_NODE_HOST}:${NGINX_NODE_PORT};
+    }
+
+    error_page 404 /index.html;
+
+    location ~ /\.ht {
+        deny all;
+    }
+}

@@ -1,0 +1,41 @@
+version: '3.1'
+
+services:
+  nginx:
+    extends:
+      file: docker-compose.base.yml
+      service: nginx
+      
+  reactjs:
+    extends:
+      file: docker-compose.base.yml
+      service: reactjs
+
+  node:
+    extends:
+      file: docker-compose.base.yml
+      service: node
+    ports:
+      - 9229:9229
+    command: "npm run ${NODE_DEV_RUN}"
+    # entrypoint: "/bin/sh"
+    # tty: true
+
+  mongo:
+    extends:
+      file: docker-compose.base.yml
+      service: mongo
+    ports:
+      - ${MONGO_PORT}:${MONGO_PORT}
+
+  # # Optional
+  # mongo-express:
+  #   extends:
+  #     file: docker-compose.base.yml
+  #     service: mongo-express
+
+
+networks:
+  cafenetwork:
+    name: cafenetwork
+    driver: "bridge"

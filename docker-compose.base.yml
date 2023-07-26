@@ -1,0 +1,115 @@
+version: '3.1'
+
+services:
+  nginx:
+    container_name: cafe-nginx
+    build: 
+      context: ./app/nginx
+      dockerfile: Dockerfile
+    ports:
+      - ${REACT_PORT}:3000
+      - ${NODE_PORT}:8079
+    volumes:
+      - ./app/nginx/conf.d:/etc/nginx/conf.d
+      - ./app/nginx/templates:/etc/nginx/templates
+      - ./app/nginx/includes:/etc/nginx/includes
+      - ./app/client:/usr/src/app/client
+      - ./app/server:/usr/src/app/server
+    environment:
+     - NGINX_HOST=localhost
+     - NGINX_REACTJS_HOST=${REACT_HOST}
+     - NGINX_REACTJS_PORT=${REACT_PORT}
+     - NGINX_NODE_HOST=${NODE_HOST}
+     - NGINX_NODE_PORT=${NODE_PORT}
+     - NGINX_NODE_API=${NODE_API}
+    networks:
+      - cafenetwork
+
+  reactjs:
+    container_name: cafe-reactjs
+    build: 
+      context: ./app/client
+      dockerfile: Dockerfile
+    environment:
+      - NODE_ENV=${NODE_ENV}
+      - NODE_VERSION=18.16.1
+      - REACT_APP_NODE_HOST=${NODE_HOST}
+      - REACT_APP_NODE_PORT=${NODE_PORT}
+      - REACT_APP_NODE_API=${NODE_API}
+    volumes:
+      - ./app/client:/usr/src/app/client
+      - /usr/src/app/client/node_modules/
+    expose:
+      - ${REACT_PORT}
+    networks:
+      - cafenetwork
+
+  node:
+    container_name: cafe-node
+    build: 
+      context: ./app/server
+      dockerfile: Dockerfile
+    restart: always
+    environment:
+      - NODE_ENV=${NODE_ENV}
+      - NODE_VERSION=18.16.1
+      - NODE_PORT=${NODE_PORT}
+      - NODE_API=${NODE_API}
+      - MONGO_HOST=${MONGO_HOST}
+      - MONGO_PORT=${MONGO_PORT}
+      - MONGO_USER=${MONGO_USER}
+      - MONGO_PASS=${MONGO_PASS}
+      - MONGO_DB_NAME=${MONGO_DB_NAME}
+      - MONGO_TEST_DB_NAME=${MONGO_TEST_DB_NAME}
+      # - NPM_CONFIG_PREFIX=/app/src/server/node.npm-global
+    volumes:
+      - ./app/server:/usr/src/app/server
+      - /usr/src/app/server/node_modules/
+    expose:
+      - ${NODE_PORT}
+    depends_on:
+      - mongo
+    links:
+        - mongo
+    networks:
+      - cafenetwork
+
+  mongo:
+    container_name: cafe-mongo
+    image: mongo:6.0-rc-jammy
+    restart: always
+    expose:
+      - ${MONGO_PORT}
+    volumes:
+      - ./data:/data/db
+      - ./init-mongo.sh:/docker-entrypoint-initdb.d/init-mongo.sh:ro
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_ROOT_USER}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_ROOT_PASS}
+      - MONGO_INITDB_DATABASE=${MONGO_DB_NAME}
+      - MONGO_HOST=${MONGO_HOST}
+      - MONGO_DB_NAME=${MONGO_DB_NAME}
+      - MONGO_TEST_DB_NAME=${MONGO_TEST_DB_NAME}
+      - MONGO_USER=${MONGO_USER}
+      - MONGO_PASS=${MONGO_PASS}
+    networks:
+      - cafenetwork
+
+  # DB GUI, optional
+  mongo-express:
+    container_name: cafe-mongo-express
+    image: mongo-express:1.0.0-alpha.4
+    restart: always
+    ports:
+      - 8081:8081
+    depends_on:
+      - mongo
+    environment:
+      ME_CONFIG_MONGODB_ENABLE_ADMIN: true
+      ME_CONFIG_BASICAUTH_USERNAME: ${MONGOEXPRESS_USER}
+      ME_CONFIG_BASICAUTH_PASSWORD: ${MONGOEXPRESS_PASSWORD}
+      ME_CONFIG_MONGODB_ADMINUSERNAME: ${MONGO_ROOT_USER}
+      ME_CONFIG_MONGODB_ADMINPASSWORD: ${MONGO_ROOT_PASS}
+      ME_CONFIG_MONGODB_URL: mongodb://${MONGO_ROOT_USER}:${MONGO_ROOT_PASS}@mongo:27017/
+    networks:
+      - cafenetwork
