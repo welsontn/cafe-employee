@@ -13,6 +13,7 @@ ReactJS:
 - Redux
 - Router
 - AG Grid (https://www.ag-grid.com)
+- MUI (https://mui.com/)
 
 NodeJS:
 - Mongoose (https://mongoosejs.com/)

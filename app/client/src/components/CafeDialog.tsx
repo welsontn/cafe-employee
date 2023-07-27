@@ -4,28 +4,24 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import DialogTitle from '@mui/material/DialogTitle';
 import Dialog from '@mui/material/Dialog';
+import {ICafe, emptyICafe} from '../interfaces/ICafe';
 
 export interface CafeDialogProps {
-  title: String;
+  title: string;
   open: boolean;
   onClose: (value: string) => void;
-  onConfirm: (method, data) => void;
-  requestMethod: String;
-  initialData: {};
+  onConfirm: (method: string, data: ICafe) => void;
+  requestMethod: string;
+  initialData: ICafe | null;
 }
 
 export default function CafeDialog(props: CafeDialogProps) {
   const { title, onClose, onConfirm, requestMethod, initialData, open } = props;
 
-  var method = requestMethod || "POST";
-  var payload = {
-    id: initialData.id || "",
-    name: initialData.name || "",
-    description: initialData.description || "",
-    location: initialData.location || "",
-  };
+  var method: string = requestMethod || "POST";
+  var payload: ICafe = initialData || emptyICafe;
 
-  const handleClose = (e) => {
+  const handleClose = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (!window.confirm("Close Dialog?")){
       e.preventDefault();
     } else {
@@ -33,27 +29,24 @@ export default function CafeDialog(props: CafeDialogProps) {
     }
   };
 
-  const handleConfirm = (e) => {
-    onConfirm(requestMethod, payload);
+  const handleConfirm = (e: React.MouseEvent<HTMLButtonElement>) => {
+    onConfirm(method, payload);
   };
-  const handleChange = (e) => {
-    payload[e.target.id] = e.target.value;
-  };
-
+  
   return (
     <Dialog className="mui-dialog" onClose={handleClose} open={open}>
       <DialogTitle>{title}</DialogTitle>
       <TextField id="name" label="Name" variant="outlined"
       defaultValue={payload.name}
-      onChange={handleChange}
+      onChange={(e: React.ChangeEvent<HTMLInputElement>) => payload.name = e.currentTarget.value}
       inputProps={{ minLength: 6,maxLength: 10 }}
       />
       <TextField id="description" label="Description" variant="outlined"
       defaultValue={payload.description}
-      onChange={handleChange}
+      onChange={(e: React.ChangeEvent<HTMLInputElement>) => payload.description = e.currentTarget.value}
       inputProps={{ maxLength: 256 }}/>
       <TextField id="location" label="Location" variant="outlined" 
-      onChange={handleChange}
+      onChange={(e: React.ChangeEvent<HTMLInputElement>) => payload.location = e.currentTarget.value}
       defaultValue={payload.location}  />
       <Button variant="outlined" onClick={handleClose}>
         Close

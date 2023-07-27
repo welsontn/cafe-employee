@@ -13,37 +13,34 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import DialogTitle from '@mui/material/DialogTitle';
 import Dialog from '@mui/material/Dialog';
+import { SelectChangeEvent } from "@mui/material";
 
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import type {} from '@mui/x-date-pickers/themeAugmentation';
+import { IEmployee, emptyIEmployee, EGender } from '../interfaces/IEmployee';
+import { ICafe } from '../interfaces/ICafe';
 import dayjs, { Dayjs } from 'dayjs';
 
 export interface EmployeeDialogProps {
-  title: String;
+  title: string;
   open: boolean;
   onClose: (value: string) => void;
-  onConfirm: (method, data) => void;
-  requestMethod: String;
-  initialData: {};
-  cafeData: {};
+  onConfirm: (method: string, data: IEmployee) => void;
+  requestMethod: string;
+  initialData: IEmployee | null;
+  cafeData: ICafe[] | null;
 }
 
 export default function EmployeeDialog(props: EmployeeDialogProps) {
   const { title, onClose, onConfirm, requestMethod, initialData, cafeData, open } = props;
 
-  var method = requestMethod || "POST";
-  var payload = {
-    id: initialData.id || "",
-    name: initialData.name || "",
-    email_address: initialData.email_address || "",
-    phone_number: initialData.phone_number || "",
-    gender: initialData.gender || "Male",
-    date_start: initialData.date_start || dayjs(Date.now()),
-    cafe_id: initialData.cafe_id || "",
-  };
+  var method: string = requestMethod || "POST";
+  var payload: IEmployee = initialData || emptyIEmployee;
+  var cafes: ICafe[] = cafeData || [];
 
-  const handleClose = (e) => {
+  const handleClose = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (!window.confirm("Close Dialog?")){
       e.preventDefault();
     } else {
@@ -51,19 +48,11 @@ export default function EmployeeDialog(props: EmployeeDialogProps) {
     }
   };
 
-  const handleConfirm = (e) => {
-    onConfirm(requestMethod, payload);
+  const handleConfirm = (e: React.MouseEvent<HTMLButtonElement>) => {
+    onConfirm(method, payload);
   };
-  const handleChange = (e) => {
-    payload[e.target.id] = e.target.value;
-  };
-  const handleChangeRadio = (e) => {
-    payload['gender'] = e.target.value;
-  };
-  const handleChangeCafe = (e) => {
-    payload['cafe_id'] = e.target.value;
-  };
-  const handleChangeDatePicker = (newvalue) => {
+  
+  const handleChangeDatePicker = (newvalue: any) => {
     payload['date_start'] = newvalue.$d;
   };
 
@@ -72,27 +61,28 @@ export default function EmployeeDialog(props: EmployeeDialogProps) {
       <DialogTitle>{title}</DialogTitle>
       <TextField id="name" label="Name" variant="outlined"
       defaultValue={payload.name}
-      onChange={handleChange}
+      onChange={(e: React.ChangeEvent<HTMLInputElement>) => payload.name = e.currentTarget.value}
       inputProps={{ minLength: 6,maxLength: 10 }}
       />
       <TextField id="email_address" label="Email Address" variant="outlined"
       defaultValue={payload.email_address}
-      onChange={handleChange}
+      onChange={(e: React.ChangeEvent<HTMLInputElement>) => payload.email_address = e.currentTarget.value}
       inputProps={{ maxLength: 256 }}/>
       <TextField id="phone_number" label="Phone Number" variant="outlined" 
-      onChange={handleChange}
+      onChange={(e: React.ChangeEvent<HTMLInputElement>) => payload.phone_number = e.currentTarget.value}
       defaultValue={payload.phone_number}  />
 
       <FormControl>
         <FormLabel id="demo-radio-buttons-group-label">Gender</FormLabel>
         <RadioGroup
-          onChange={handleChangeRadio}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => payload.gender = e.currentTarget.value}
           defaultValue={payload.gender}
           id="gender"
           name="gender"
         >
-          <FormControlLabel value="Male" control={<Radio />} label="Male" />
-          <FormControlLabel value="Female" control={<Radio />} label="Female" />
+          {(Object.keys(EGender) as Array<keyof typeof EGender>).map(item => {
+              return <FormControlLabel value={item} control={<Radio />} label={item}/>;
+          })}
         </RadioGroup>
       </FormControl>
 
@@ -100,14 +90,14 @@ export default function EmployeeDialog(props: EmployeeDialogProps) {
         <FormControl fullWidth >
           <InputLabel id="assigned_cafe">Assigned Cafe</InputLabel>
           <Select sx={{marginRight:"20px"}}
-            onChange={handleChangeCafe}
+            onChange={(e: SelectChangeEvent<string>) => payload.cafe_id = e.target.value}
             labelId="assigned_cafe"
             id="cafe_id"
             defaultValue={payload.cafe_id}
             label="assigned_cafe"
           >
             <MenuItem value=''>None</MenuItem>
-            {cafeData.map(item => {
+            {cafes.map(item => {
               return <MenuItem value={item._id}>{item.name}</MenuItem>;
             })}
           </Select>
@@ -116,6 +106,8 @@ export default function EmployeeDialog(props: EmployeeDialogProps) {
 
       <LocalizationProvider 
         dateAdapter={AdapterDayjs}>
+          {/* 
+            // @ts-ignore */}
         <DatePicker id="date_start" label="Date Picker" variant="outlined"
         onChange={handleChangeDatePicker}
         defaultValue={dayjs(payload.date_start)}

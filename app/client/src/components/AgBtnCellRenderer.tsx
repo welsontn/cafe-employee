@@ -1,19 +1,28 @@
 // AgBtnCellRenderer.jsx
-import { Component } from 'react';
+import React from 'react';
 import Button from '@mui/material/Button';
 
-export default class AgBtnCellRenderer extends Component {
-  constructor(props) {
+export type AgBtnCellProps = {
+  editClicked: (s: string) => void,
+  deleteClicked: (s: string) => void,
+  id: string
+}
+
+type AgBtnCellState = {
+
+}
+
+export default class AgBtnCellRenderer extends React.Component<AgBtnCellProps, AgBtnCellState> {
+  constructor(props: AgBtnCellProps) {
     super(props);
     this.btnClickEdit = this.btnClickEdit.bind(this);
     this.btnClickDelete = this.btnClickDelete.bind(this);
   }
   btnClickEdit() {
-   this.props.editClicked(this.props.data);
+   this.props.editClicked(this.props.id);
   }
   btnClickDelete() {
-    // console.log(this.props);
-   this.props.deleteClicked(this.props.data);
+   this.props.deleteClicked(this.props.id);
   }
   render() {
     return (
