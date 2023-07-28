@@ -75,7 +75,7 @@ exports.put = asyncHandler(async (req: Request, res: Response, NextFunction): Pr
     return res.status(422).jsonp(errors.array());
   }
 
-  var qid = req.body.id;
+  var qid = req.body._id || req.body.id;
 
   var qname: string = req.body.name;
   var qdescription: string = req.body.description;
@@ -107,7 +107,7 @@ exports.put = asyncHandler(async (req: Request, res: Response, NextFunction): Pr
 
 // Delete Cafe
 exports.delete = asyncHandler(async (req: Request, res: Response, NextFunction): Promise<any>  => {
-  var qid = req.query.id;
+  var qid = req.body._id || req.body.id;
 
   // start transaction
   const session = await mongoose.startSession();

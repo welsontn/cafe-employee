@@ -4,7 +4,7 @@ import Root, {
 } from "./root";
 import Cafes, {
   loader as cafesLoader,
-} from "./cafes"
+} from "../features/cafes/Cafes"
 import Employees, {
   loader as employeesLoader,
 } from "./employees"
@@ -26,6 +26,7 @@ export const router = createBrowserRouter([
         path: "cafes",
         element: <Cafes />,
         loader: cafesLoader,
+        // action: cafesAction,
       },
       {
         path: "employees",
