@@ -1,5 +1,3 @@
-
-// export const NODE_ORIGIN = `//${process.env.REACT_APP_NODE_HOST}:${process.env.REACT_APP_NODE_PORT}`;
 let node_api = "";
 if (process.env.REACT_APP_NODE_API !== undefined){
   node_api = `/${process.env.REACT_APP_NODE_API}`;

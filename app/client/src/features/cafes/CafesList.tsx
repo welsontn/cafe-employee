@@ -1,10 +1,8 @@
 import React, {useRef, useEffect} from 'react'
 import { Link } from "react-router-dom";
-import AgBtnCellRenderer, { AgBtnCellProps } from "../../components/AgBtnCellRenderer";
-import { NODE_ORIGIN } from '../../utils/webs';
-import { shallowEqual, useSelector } from 'react-redux'
-import { ICafe, emptyICafe } from '../../interfaces/ICafe'
-import { ICafesState } from './CafesSlice'
+import AgBtnCellRenderer from "../../components/AgBtnCellRenderer";
+import { useSelector } from 'react-redux'
+import { ICafe } from '../../interfaces/ICafe'
 import { AgGridReact } from 'ag-grid-react';
 import { CellClickedEvent, GridReadyEvent, ColDef, ICellRendererParams } from 'ag-grid-community';
 
@@ -26,8 +24,6 @@ export const CafesList = (props: CafesListProps) => {
 
   const { editClicked, deleteClicked, onCellClicked } = props;
 
-  // TODO: render update one item only instead of whole list when updating/deleting
-  //shallowEqual
   const cafesData:ICafe[] = useSelector(selectCafes)
 
   const gridRef = useRef<any>(null);

@@ -7,7 +7,7 @@ import Cafes, {
 } from "../features/cafes/Cafes"
 import Employees, {
   loader as employeesLoader,
-} from "./employees"
+} from "../features/employees/Employees"
 import ErrorPage from "../error-page"
 
 import {

@@ -36,9 +36,7 @@ export const CafesSlice = createSlice({
 
       if (index >= 0){
         // update cafe
-        cafeData[index].name = cafe.name
-        cafeData[index].description = cafe.description
-        cafeData[index].location = cafe.location
+        cafeData[index]= cafe
 
         // update state
         state.cafes = cafeData

@@ -4,21 +4,15 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import DialogTitle from '@mui/material/DialogTitle';
 import Dialog from '@mui/material/Dialog';
-import {ICafe, ICafeModalState, emptyICafe} from '../../interfaces/ICafe';
+import {ICafe} from '../../interfaces/ICafe';
 import { cafesActions } from './CafesSlice';
 import { RootState } from '../../app/store';
-import { shallowEqual, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
-import { useAddCafeMutation } from './CafesApi';
 import { ERequestMethod } from '../../enums/ERequestMethod';
 import CafesBtnAdd from './CafesBtnAdd';
 import CafesBtnUpdate from './CafesBtnUpdate';
 import { IErrorInputMessage } from '../../interfaces/IError';
-
-interface IErrorMessage{
-  [index:string]: string;
-}
-
 
 // props
 export interface CafesModalProps {
