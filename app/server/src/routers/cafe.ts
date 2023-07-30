@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const cafeController = require("../controllers/cafeController");
-const {check, validationResult} = require('express-validator');
+import cafeController from "#src/controllers/cafeController";
+const { check } = require('express-validator');
 
 
 const validationChecks = [

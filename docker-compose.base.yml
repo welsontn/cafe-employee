@@ -67,10 +67,6 @@ services:
       - /usr/src/app/server/node_modules/
     expose:
       - ${NODE_PORT}
-    depends_on:
-      - mongo
-    links:
-        - mongo
     networks:
       - cafenetwork
 

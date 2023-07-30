@@ -1,132 +1,132 @@
 import { Request, Response } from 'express';
 import mongoose, { HydratedDocument } from 'mongoose';
-import Cafe, { ICafe } from "../models/cafe";
-import Employee, { IEmployee } from "../models/employee";
+import Cafe, { ICafe } from "#src/models/cafe";
 import asyncHandler from "express-async-handler";
 import {check, validationResult} from 'express-validator';
-import utils from "../utils/utils";
+import utils from "#src/utils/utils";
 
-// Display Cafe on GET
-exports.get = asyncHandler(async (req: Request, res: Response, NextFunction): Promise<any>  => {
-  var cafe;
-  var location = req.query.location;
+const CafeController = {
 
-  // query
-  if (location){
-    cafe = await Cafe.find({ location: location});
-  } else {
-    cafe = await Cafe.find({});
-  }
+  // Display Cafe on GET
+  get: asyncHandler(async (req: Request, res: Response, NextFunction): Promise<any>  => {
 
-  // morph data
-  var result = [];
-  for (const c of cafe) {
-    let temp = c.toObject({virtuals: true});
-    result.push(temp)
-  };
+    var cafes: ICafe[];
+    var location:string = req.query.location as string;
 
-  return res.send(result);
-});
+    // query
+    if (location){
+      cafes = await Cafe.find({location: location});
+    } else {
+      cafes = await Cafe.find({});
+    }
 
-// Handle Cafe create on POST.
-exports.post = asyncHandler(async (req: Request, res: Response, NextFunction): Promise<any>  => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(422).jsonp(errors.array());
-  }
-  
-  var qname: string = req.body.name;
-  var qdescription: string = req.body.description;
-  var qlocation: string = req.body.location;
+    return res.status(200).json(cafes);
+  }),
 
-  // start transaction
-  const session = await mongoose.startSession();
-  session.startTransaction();
-
-  var cafe;
-  try {
-    // create model
-    cafe = new Cafe({   
-                      name: qname,
-                      description: qdescription,
-                      location: qlocation,
-                      employee_count: 0
-                    });
-    await cafe.save();
+  // Handle Cafe create on POST.
+  post: asyncHandler(async (req: Request, res: Response, NextFunction): Promise<any>  => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(422).json(errors.array());
+    }
     
-    // commit transaction
-    session.commitTransaction();
-    session.endSession();
-  } catch (err){
-    session.abortTransaction();
-    session.endSession();
-    let msg: string = utils.errorCheck(err);
-    res.status(403).send(msg);
-  }
+    var qname: string = req.body.name;
+    var qdescription: string = req.body.description;
+    var qlocation: string = req.body.location;
 
-  // response data
-  res.status(200).send(cafe);
-});
+    // start transaction
+    const session = await mongoose.startSession();
+    session.startTransaction();
 
-// Update Cafe
-exports.put = asyncHandler(async (req: Request, res: Response, NextFunction): Promise<any>  => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(422).jsonp(errors.array());
-  }
+    var cafe;
+    try {
+      // create model
+      cafe = new Cafe({   
+                        name: qname,
+                        description: qdescription,
+                        location: qlocation,
+                        employee_count: 0
+                      });
+      await cafe.save();
+      
+      // commit transaction
+      session.commitTransaction();
+      session.endSession();
+    } catch (err){
+      session.abortTransaction();
+      session.endSession();
+      let msg: string = utils.errorCheck(err);
+      return res.status(403).json(msg);
+    }
 
-  var qid = req.body._id || req.body.id;
+    // response data
+    return res.status(200).json(cafe);
+  }),
 
-  var qname: string = req.body.name;
-  var qdescription: string = req.body.description;
-  var qlocation: string = req.body.location;
+  // Update Cafe
+  put: asyncHandler(async (req: Request, res: Response, NextFunction): Promise<any>  => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(422).json(errors.array());
+    }
 
-  // start transaction
-  const session = await mongoose.startSession();
-  session.startTransaction();
-  var result;
-  try {
-    result = await Cafe.updateOne({_id:qid}, 
-                                  { name: qname,
-                                    description: qdescription,
-                                    location: qlocation},
-                                    {runValidators: true});
+    var qid = req.body._id || req.body.id;
 
-    // commit transaction
-    session.commitTransaction();
-    session.endSession();
-  } catch (err){
-    session.abortTransaction();
-    session.endSession();
-    let msg: string = utils.errorCheck(err);
-    return res.status(403).send(msg);
-  }
+    var qname: string = req.body.name;
+    var qdescription: string = req.body.description;
+    var qlocation: string = req.body.location;
 
-  return res.sendStatus(200);
-});
+    // start transaction
+    const session = await mongoose.startSession();
+    session.startTransaction();
+    var result;
+    try {
 
-// Delete Cafe
-exports.delete = asyncHandler(async (req: Request, res: Response, NextFunction): Promise<any>  => {
-  var qid = req.body._id || req.body.id;
+      result = await Cafe.updateOne({_id:qid}, 
+                                    { name: qname,
+                                      description: qdescription,
+                                      location: qlocation},
+                                      {runValidators: true});
 
-  // start transaction
-  const session = await mongoose.startSession();
-  session.startTransaction();
+      // commit transaction
+      session.commitTransaction();
+      session.endSession();
+    } catch (err){
+      session.abortTransaction();
+      session.endSession();
+      let msg: string = utils.errorCheck(err);
+      return res.status(403).json(msg);
+    }
 
-  try {
-    // delete
-    var cafe = await Cafe.findOneAndDelete({_id:qid});
+    return res.sendStatus(200);
+  }),
 
-    // commit transaction
-    session.commitTransaction();
-    session.endSession();
-  } catch (err){
-    session.abortTransaction();
-    session.endSession();
-    let msg: string = utils.errorCheck(err);
-    return res.status(403).send(msg);
-  }
+  // Delete Cafe
+  delete: asyncHandler(async (req: Request, res: Response, NextFunction): Promise<any>  => {
+    var qid = req.body._id || req.body.id;
 
-  // send response back
-  return res.sendStatus(200);
-});
+    // start transaction
+    const session = await mongoose.startSession();
+    session.startTransaction();
+
+    try {
+      // delete
+      var cafe = await Cafe.findOneAndDelete({_id:qid});
+
+      // commit transaction
+      session.commitTransaction();
+      session.endSession();
+    } catch (err){
+      session.abortTransaction();
+      session.endSession();
+      let msg: string = utils.errorCheck(err);
+      return res.status(403).json(msg);
+    }
+
+    // send response back
+    return res.sendStatus(200);
+  }),
+
+}
+
+export default CafeController;

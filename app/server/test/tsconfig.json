@@ -1,0 +1,30 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "module": "commonjs",
+    "experimentalDecorators": true,
+    "strictPropertyInitialization": false,
+    "isolatedModules": false,
+    "strict": false,
+    "noImplicitAny": false,
+    "typeRoots" : [
+      "../node_modules/@types"
+    ],
+    "baseUrl": "../",
+    "outDir": "../dist",
+    "rootDirs": [
+      "../src",
+      "./"
+    ],
+    "paths": {
+      "#src/*": ["./src/*"],
+      "#test/*": ["./test/*"],
+    },
+    "types": [
+      "mocha",
+      "chai",
+      "node",
+      "global"
+    ],
+  },
+}

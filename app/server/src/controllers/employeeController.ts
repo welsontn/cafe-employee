@@ -1,11 +1,10 @@
 import { Request, Response } from 'express';
 import mongoose, { HydratedDocument } from 'mongoose';
 import Cafe, { ICafe } from "../models/cafe";
-import Employee, { IEmployee } from "../models/employee";
+import Employee, { IEmployee } from "#src/models/employee";
 import asyncHandler from "express-async-handler";
 import {check, validationResult} from 'express-validator';
-import utils from "../utils/utils";
-import connect from '../middlewares/database';
+import utils from "#src/utils/utils";
 
 // Display Employee on GET
 exports.get = asyncHandler(async (req: Request, res: Response, NextFunction): Promise<any> => {
@@ -26,14 +25,14 @@ exports.get = asyncHandler(async (req: Request, res: Response, NextFunction): Pr
     employees = await Employee.find({});
   }
 
-  return res.send({employees:employees, cafes:cafe_names});
+  return res.json({employees:employees, cafes:cafe_names});
 });
 
 // Handle Employee create on POST.
 exports.post = asyncHandler(async (req: Request, res: Response, NextFunction): Promise<any> => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.status(422).jsonp(errors.array());
+    return res.status(422).json(errors.array());
   }
   let remployee: IEmployee = {
     name: req.body.name,
@@ -69,7 +68,7 @@ exports.post = asyncHandler(async (req: Request, res: Response, NextFunction): P
     session.abortTransaction();
     session.endSession();
     let msg: string = utils.errorCheck(err);
-    return res.status(403).send(msg);
+    return res.status(403).json(msg);
   }
 
   // send response back
@@ -81,7 +80,7 @@ exports.put = asyncHandler(async (req: Request, res: Response, NextFunction): Pr
   // validate input
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.status(422).jsonp(errors.array());
+    return res.status(422).json(errors.array());
   }
 
   var qid = req.body.id;
@@ -141,7 +140,7 @@ exports.put = asyncHandler(async (req: Request, res: Response, NextFunction): Pr
     session.abortTransaction();
     session.endSession();
     let msg: string = utils.errorCheck(err);
-    return res.status(403).send(msg);
+    return res.status(403).json(msg);
   }
 
   // send response back
@@ -171,7 +170,7 @@ exports.delete = asyncHandler(async (req: Request, res: Response, NextFunction):
     session.abortTransaction();
     session.endSession();
     let msg: string = utils.errorCheck(err);
-    return res.status(403).send(msg);
+    return res.status(403).json(msg);
   }
 
   // send response back

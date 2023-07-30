@@ -7,6 +7,12 @@ What this project aims to achieve is just for me to learn how react (as client) 
 
 Biggest challenge was getting TypeScript data typing right in React and Node environment. Interface and extend classes were simple enough and well documented. However the challenging part was what *kind* of data type is being returned from callback. Even if data type is seemingly set right, the compiler will return an error for missing parameter, or unable to detect callback function. This easily doubled the amount of work I had to put in...
 
+# TODO
+
+- Unit Testing (Partial finished)
+- Integration Testing
+- CI/CD pipeline Build
+
 # Modules Used
 
 ReactJS:
@@ -19,7 +25,8 @@ NodeJS:
 - Mongoose (https://mongoosejs.com/)
 
 Testing tools:
-- jest
+- Jest for react
+- Mocha, Chai and Sinon for node
 
 # Quickstart
 

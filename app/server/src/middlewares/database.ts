@@ -1,4 +1,4 @@
-import utils from "../utils/utils";
+import utils from "#src/utils/utils";
 const mongoose = require('mongoose');
 const connect = async () => {
   try {

@@ -1,5 +1,9 @@
 #!/user/bin/env bash
 
+# Builtkit and CLI build
+export DOCKER_BUILDKIT=1
+export COMPOSE_DOCKER_CLI_BUILD=1
+
 # which docker-compose & env file to use
 COMPOSE_FILE="local"
 

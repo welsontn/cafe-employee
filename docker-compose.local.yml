@@ -10,6 +10,8 @@ services:
     extends:
       file: docker-compose.base.yml
       service: reactjs
+    build:
+      target: "dev"
 
   node:
     extends:
@@ -17,7 +19,8 @@ services:
       service: node
     ports:
       - 9229:9229
-    command: "npm run ${NODE_DEV_RUN}"
+    build:
+      target: "dev"
     # entrypoint: "/bin/sh"
     # tty: true
 

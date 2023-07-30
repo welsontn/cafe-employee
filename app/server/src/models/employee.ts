@@ -33,10 +33,5 @@ export const EmployeeSchema: Schema = new Schema<IEmployee>({
     toJSON: { virtuals: true }
 });
 
-// virtual method
-EmployeeSchema.virtual('days_worked').get(function(this: IEmployee): number {
-  return utils.dateDiff(new Date().toString(), this.date_start.toString());
-});
-
 const Employee = model<IEmployee>("employee", EmployeeSchema, "employees");
 export default Employee;

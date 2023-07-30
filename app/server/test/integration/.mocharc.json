@@ -1,0 +1,6 @@
+{
+  "require": [
+    "./test/integration/mocha-config.ts",
+    "./test/integration/mocha-hooks.ts"
+  ]
+}

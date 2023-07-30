@@ -1,4 +1,4 @@
-import { Types, Document, Schema, Model, model } from 'mongoose';
+import mongoose, { Types, Document, Schema, Model, model } from 'mongoose';
 import Employee from './employee';
 import {v1 as uuid} from 'uuid';
 
@@ -8,6 +8,13 @@ export interface ICafe {
   description: string;
   location: string;
   employee_count: number;
+}
+
+export const emptyICafe: ICafe = {
+  name: "",
+  description: "",
+  location: "",
+  employee_count: 0,
 }
 
 // schema
@@ -21,7 +28,6 @@ export const CafeSchema: Schema = new Schema<ICafe>({
     toObject: { virtuals: true },
     toJSON: { virtuals: true }
 });
-
 
 const Cafe = model<ICafe>("cafe", CafeSchema, "cafes")
 export default Cafe;

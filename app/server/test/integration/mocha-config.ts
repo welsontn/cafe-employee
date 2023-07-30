@@ -1,3 +1,15 @@
+//global declare
+declare global {
+  var assert: any;
+  var config: any;
+  var mongo: any; //mongoose
+}
+
+//make assert global
+import assert from 'assert';
+global.assert = assert;
+
+// config
 const config = {
   Memory: false, // alpine not supported
   IP: process.env.MONGO_HOST,
@@ -6,4 +18,4 @@ const config = {
   Password: process.env.MONGO_PASS,
   Database: process.env.MONGO_TEST_DB_NAME,
 }
-export = config;
+global.config = config;
