@@ -9,7 +9,6 @@ Biggest challenge was getting TypeScript data typing right in React and Node env
 
 # TODO
 
-- Unit Testing (Partial finished)
 - Integration Testing
 - CI/CD pipeline Build
 

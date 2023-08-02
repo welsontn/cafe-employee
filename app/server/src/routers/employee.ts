@@ -1,7 +1,7 @@
 import {EGender} from "#src/models/employee";
 const express = require('express');
 const router = express.Router();
-const employeeController = require("#src/controllers/employeeController");
+import employeeController from "#src/controllers/employeeController";
 const {check, validationResult} = require('express-validator');
 
 // validation check

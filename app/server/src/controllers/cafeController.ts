@@ -5,7 +5,7 @@ import asyncHandler from "express-async-handler";
 import {check, validationResult} from 'express-validator';
 import utils from "#src/utils/utils";
 
-const CafeController = {
+const cafeController = {
 
   // Display Cafe on GET
   get: asyncHandler(async (req: Request, res: Response, NextFunction): Promise<any>  => {
@@ -129,4 +129,4 @@ const CafeController = {
 
 }
 
-export default CafeController;
+export default cafeController;
