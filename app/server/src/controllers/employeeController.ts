@@ -70,7 +70,7 @@ const employeeController = {
       session.abortTransaction();
       session.endSession();
       let msg: string = utils.errorCheck(err);
-      return res.status(403).json(msg);
+      return res.status(422).json(msg);
     }
 
     // send response back
@@ -142,7 +142,7 @@ const employeeController = {
       session.abortTransaction();
       session.endSession();
       let msg: string = utils.errorCheck(err);
-      return res.status(403).json(msg);
+      return res.status(422).json(msg);
     }
 
     // send response back
@@ -172,7 +172,7 @@ const employeeController = {
       session.abortTransaction();
       session.endSession();
       let msg: string = utils.errorCheck(err);
-      return res.status(403).json(msg);
+      return res.status(422).json(msg);
     }
 
     // send response back

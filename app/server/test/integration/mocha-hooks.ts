@@ -16,7 +16,6 @@ exports.mochaHooks = {
         process.env.MONGO_URI = uri.slice(0, uri.lastIndexOf('/'));
       } else {
         process.env.MONGO_URI = `mongodb://${config.User}:${config.Password}@${config.IP}:${config.Port}/${config.Database}`;
-        // process.env.MONGO_URI = `mongodb://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@${process.env.MONGO_HOST}:${process.env.MONGO_PORT}/${process.env.MONGO_DB_NAME}`; 
       }
 
       // // tells mongoose to use ES6 implementation of promises
@@ -24,8 +23,6 @@ exports.mochaHooks = {
 
       // The following is to make sure the database is clean before an test starts
       const connection = await mongoose.connect(`${process.env.MONGO_URI}`);
-
-      // await connection.connection.db.dropDatabase(); // permission error
       let collections = await connection.connection.db.collections();
       for (let c of collections) {
         await c.drop()
@@ -50,7 +47,7 @@ exports.mochaHooks = {
       console.log("All done - tearing down")
 
       // tear down
-      if (config.Memory) { // Config to decided if an mongodb-memory-server instance should be used
+      if (config.Memory) {
         const instance: MongoMemoryServer = (global as any).__MONGOINSTANCE;
         await instance.stop();
       }

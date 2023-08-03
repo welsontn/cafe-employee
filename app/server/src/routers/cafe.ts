@@ -12,10 +12,10 @@ const validationChecks = [
 
 // routes
 router.get('/cafes', cafeController.get);
-router.post('/cafe', validationChecks,
+router.post('/cafes', validationChecks,
 	cafeController.post);
-router.put('/cafe', validationChecks,
+router.put('/cafes', validationChecks,
 	cafeController.put);
-router.delete('/cafe', cafeController.delete);
+router.delete('/cafes', cafeController.delete);
 
 export = router;

@@ -1,4 +1,3 @@
-import "chai/register-expect.js";
 import "chai/register-assert.js";
 import * as sinon from "sinon";
 
@@ -98,7 +97,7 @@ describe('CafeController', function() {
       
       await cafeController.post(query, mockResponse, mockNext);
   
-      sinon.assert.calledWith(mockResponse.status, 403);
+      sinon.assert.calledWith(mockResponse.status, 422);
       sinon.assert.calledWithMatch(mockResponse.json, "Cafe already exist");
     });
   });
@@ -133,7 +132,7 @@ describe('CafeController', function() {
 
       await cafeController.put(query, mockResponse, mockNext);
   
-      sinon.assert.calledWith(mockResponse.status, 403);
+      sinon.assert.calledWith(mockResponse.status, 422);
       sinon.assert.calledWithMatch(mockResponse.json, "_id not found");
     });
 
@@ -168,7 +167,7 @@ describe('CafeController', function() {
 
       await cafeController.put(query, mockResponse, mockNext);
   
-      sinon.assert.calledWith(mockResponse.status, 403);
+      sinon.assert.calledWith(mockResponse.status, 422);
       sinon.assert.calledWithMatch(mockResponse.json, "_id not found");
     });
   });
@@ -201,7 +200,7 @@ describe('CafeController', function() {
 
       await cafeController.delete(query, mockResponse, mockNext);
 
-      sinon.assert.calledWith(mockResponse.status, 403);
+      sinon.assert.calledWith(mockResponse.status, 422);
       sinon.assert.calledWithMatch(mockResponse.json, "_id not found");
     });
   });

@@ -17,12 +17,12 @@ const validationChecks = [
 
 // routes
 router.get('/employees', employeeController.get);
-router.post('/employee', 
+router.post('/employees', 
 	validationChecks,
 	employeeController.post);
-router.put('/employee', 
+router.put('/employees', 
 	validationChecks,
 	employeeController.put);
-router.delete('/employee', employeeController.delete);
+router.delete('/employees', employeeController.delete);
 
 export = router;

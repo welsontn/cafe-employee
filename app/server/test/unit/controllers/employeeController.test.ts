@@ -1,4 +1,3 @@
-import "chai/register-expect.js";
 import "chai/register-assert.js";
 import * as sinon from "sinon";
 
@@ -115,7 +114,7 @@ describe('EmployeeController', function() {
 
       await employeeController.post(query, mockResponse, mockNext);
   
-      sinon.assert.calledWith(mockResponse.status, 403);
+      sinon.assert.calledWith(mockResponse.status, 422);
       sinon.assert.calledWithMatch(mockResponse.json, "Employee already exist");
     });
   });
@@ -159,7 +158,7 @@ describe('EmployeeController', function() {
   
       await employeeController.put(query, mockResponse, mockNext);
 
-      sinon.assert.calledWith(mockResponse.status, 403);
+      sinon.assert.calledWith(mockResponse.status, 422);
       sinon.assert.calledWithMatch(mockResponse.json, "_id not found");
     });
   });
@@ -196,7 +195,7 @@ describe('EmployeeController', function() {
   
       await employeeController.delete(query, mockResponse, mockNext);
 
-      sinon.assert.calledWith(mockResponse.status, 403);
+      sinon.assert.calledWith(mockResponse.status, 422);
       sinon.assert.calledWithMatch(mockResponse.json, "_id not found");
     });
 

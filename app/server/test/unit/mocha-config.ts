@@ -1,8 +1,6 @@
 //global declare
 declare global {
   var assert: any;
-  var config: any;
-  var mongo: any; //mongoose
 }
 
 //make assert global

@@ -1,13 +1,8 @@
 //global declare
 declare global {
-  var assert: any;
   var config: any;
   var mongo: any; //mongoose
 }
-
-//make assert global
-import assert from 'assert';
-global.assert = assert;
 
 // config
 const config = {
@@ -19,3 +14,7 @@ const config = {
   Database: process.env.MONGO_TEST_DB_NAME,
 }
 global.config = config;
+
+// add env that this is integration testing
+process.env.NODE_TESTING = 'true';
+process.env.NODE_PORT = '8888';

@@ -56,7 +56,7 @@ const cafeController = {
       session.abortTransaction();
       session.endSession();
       let msg: string = utils.errorCheck(err);
-      return res.status(403).json(msg);
+      return res.status(422).json(msg);
     }
 
     // response data
@@ -88,6 +88,10 @@ const cafeController = {
                                       location: qlocation},
                                       {runValidators: true});
 
+      if (result.matchedCount == 0){
+        throw Error("Cafe not found");
+      }
+
       // commit transaction
       session.commitTransaction();
       session.endSession();
@@ -95,7 +99,7 @@ const cafeController = {
       session.abortTransaction();
       session.endSession();
       let msg: string = utils.errorCheck(err);
-      return res.status(403).json(msg);
+      return res.status(422).json(msg);
     }
 
     return res.sendStatus(200);
@@ -111,7 +115,11 @@ const cafeController = {
 
     try {
       // delete
-      var cafe = await Cafe.findOneAndDelete({_id:qid});
+      var result = await Cafe.findOneAndDelete({_id:qid});
+
+      if (result === null){
+        throw Error("Cafe not found");
+      }
 
       // commit transaction
       session.commitTransaction();
@@ -120,7 +128,7 @@ const cafeController = {
       session.abortTransaction();
       session.endSession();
       let msg: string = utils.errorCheck(err);
-      return res.status(403).json(msg);
+      return res.status(422).json(msg);
     }
 
     // send response back

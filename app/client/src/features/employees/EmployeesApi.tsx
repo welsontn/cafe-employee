@@ -53,7 +53,7 @@ export const EmployeesApi = createApi({
     // create new employee
     addEmployee: builder.mutation<IEmployee, Partial<IEmployee>>({
       query: (body) => ({
-        url: `employee`,
+        url: `employees`,
         method: 'POST',
         body,
       }),
@@ -64,7 +64,7 @@ export const EmployeesApi = createApi({
     // update employee
     updateEmployee: builder.mutation<IEmployee, Partial<IEmployee>>({
       query: (body) => ({
-        url: `employee`,
+        url: `employees`,
         method: 'PUT',
         body,
       }),
@@ -75,7 +75,7 @@ export const EmployeesApi = createApi({
     // delete employee
     deleteEmployee: builder.mutation<IEmployee, Partial<IEmployee>>({
       query: (body) => ({
-        url: `employee`,
+        url: `employees`,
         method: 'DELETE',
         body,
       }),

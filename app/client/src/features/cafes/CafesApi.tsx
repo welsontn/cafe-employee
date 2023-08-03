@@ -2,7 +2,6 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { ICafe, emptyICafe } from "../../interfaces/ICafe";
 import { NODE_ORIGIN } from '../../utils/webs';
 
-import axios  from "axios";
 import { cafesActions } from './CafesSlice';
 import { IErrorInputMessage } from '../../interfaces/IError';
 
@@ -55,7 +54,7 @@ export const CafesApi = createApi({
     // create new cafe
     addCafe: builder.mutation<ICafe, Partial<ICafe>>({
       query: (body) => ({
-        url: `cafe`,
+        url: `cafes`,
         method: 'POST',
         body,
       }),
@@ -66,7 +65,7 @@ export const CafesApi = createApi({
     // update cafe
     updateCafe: builder.mutation<ICafe, Partial<ICafe>>({
       query: (body) => ({
-        url: `cafe`,
+        url: `cafes`,
         method: 'PUT',
         body,
       }),
@@ -77,7 +76,7 @@ export const CafesApi = createApi({
     // delete cafe
     deleteCafe: builder.mutation<ICafe, Partial<ICafe>>({
       query: (body) => ({
-        url: `cafe`,
+        url: `cafes`,
         method: 'DELETE',
         body,
       }),
